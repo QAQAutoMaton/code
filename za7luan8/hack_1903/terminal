@@ -1,0 +1,4 @@
+gen.cpp: In function ‘int main()’:
+gen.cpp:59:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
+  freopen("hack.in","w",stdout);
+  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
