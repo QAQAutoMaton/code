@@ -1,0 +1,7 @@
+sortall.cpp: In function ‘int main()’:
+sortall.cpp:104:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
+  freopen("sortall.in","r",stdin);
+  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+sortall.cpp:105:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
+  freopen("sortall.out","w",stdout);
+  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~

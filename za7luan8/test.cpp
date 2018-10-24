@@ -16,30 +16,84 @@ const double eps=1e-8;
 const double pi=acos(-1.0);
 typedef long long ll;
 typedef pair<int,int> pii;
-template<class T>int chkmin(T &a,T b){return a>b?a=b,1:0;}
-template<class T>int chkmax(T &a,T b){return a<b?a=b,1:0;}
-//template<class T>T sqr(T a){return a*a;}
-template<class T>T mmin(T a,T b){return a<b?a:b;}
-template<class T>T mmax(T a,T b){return a>b?a:b;}
-template<class T>T aabs(T a){return a<0?-a:a;}
-template<class T>int dcmp(T a,T b){return a>b;}
+template<typename T>int chkmin(T &a,T b){return a>b?a=b,1:0;}
+template<typename T>int chkmax(T &a,T b){return a<b?a=b,1:0;}
+template<typename T>T sqr(T a){return a*a;}
+template<typename T>T mmin(T a,T b){return a<b?a:b;}
+template<typename T>T mmax(T a,T b){return a>b?a:b;}
+template<typename T>T aabs(T a){return a<0?-a:a;}
+template<typename T>int dcmp(T a,T b){return a>b;}
 template<int *a>int cmp_a(int x,int y){return a[x]<a[y];}
 #define min mmin
 #define max mmax
 #define abs aabs
-int read(){
-	int s=0,base=1;
-	char c;
-	while(!isdigit(c=getchar()))if(c=='-')base=-base;
-	while(isdigit(c)){s=s*10+(c^48);c=getchar();}
-	return s*base;
+namespace io {
+	const int SIZE = (1 << 21) + 1;
+	char ibuf[SIZE], *iS, *iT, obuf[SIZE], *oS = obuf, *oT = oS + SIZE - 1, c, qu[55]; int f, qr;
+	// getchar
+	#define gc() (iS == iT ? (iT = (iS = ibuf) + fread (ibuf, 1, SIZE, stdin), (iS == iT ? EOF : *iS ++)) : *iS ++)
+	// print the remaining part
+	inline void flush () {
+		fwrite (obuf, 1, oS - obuf, stdout);
+		oS = obuf;
+	}
+	// putchar
+	inline void putc (char x) {
+		*oS ++ = x;
+		if (oS == oT) flush ();
+	}
+	// input a signed integer
+	inline void read (int &x) {
+		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
+		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
+	}
+	inline void read (char &x) {
+		x=gc();
+	}
+	inline void read(char *x){
+		while((*x=gc())=='\n' || *x==' '||*x=='\r');
+		while(!(*x=='\n'||*x==' '||*x=='\r'))*(++x)=gc();
+	}
+	template<typename A,typename ...B>
+	inline void read(A &x,B &...y){
+		read(x);read(y...);
+	}
+	// print a signed integer
+	inline void print (int x) {
+		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
+		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
+		while (qr) putc (qu[qr --]);
+	}
+	inline void print (char x) {
+		putc(x);
+	}
+	inline void print(const char *x){
+		while(*x){putc(*x);++x;}
+	}
+	inline void print(char *x){
+		while(*x){putc(*x);++x;}
+	}
+	template<typename A,typename ...B>
+	inline void print(A x,B ...y){
+		print(x);print(y...);
+	}
+	//no need to call flush at the end manually!
+	struct Flusher_ {~Flusher_(){flush();}}io_flusher_;
 }
-template<class T>
-struct point{
-	T x,y;
-};
-point<int> a;
+using io :: read;
+using io :: putc;
+using io :: print;
+char *s="wxhtxdy\n";
 int main(){
+#ifdef cnyali_lk
+	freopen("test.in","r",stdin);
+	freopen("test.out","w",stdout);
+#endif
+	int a,b;
+	char c;
+	read(a,c,b);
+	print(a+b,' ',a-b,s,"wxhtxdy\n",a*b,'|',a*b-a-b,'\n');
+	
 	return 0;
 }
 

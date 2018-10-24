@@ -1,7 +1,10 @@
-zcyddjxd.cpp: In function ‘int main()’:
-zcyddjxd.cpp:48:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
-  freopen("zcyddjxd.in","r",stdin);
-  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
-zcyddjxd.cpp:49:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
-  freopen("zcyddjxd.out","w",stdout);
-  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+test.cpp:86:9: warning: ISO C++ forbids converting a string constant to ‘char*’ [-Wwrite-strings]
+ char *s="wxhtxdy\n";
+         ^~~~~~~~~~~
+test.cpp: In function ‘int main()’:
+test.cpp:89:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
+  freopen("test.in","r",stdin);
+  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+test.cpp:90:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
+  freopen("test.out","w",stdout);
+  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
