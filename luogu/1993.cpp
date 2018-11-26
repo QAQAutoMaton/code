@@ -1,7 +1,7 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 2148.cpp
+PROG: 1993.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
@@ -12,10 +12,11 @@ Mail: cnyalilk@vip.qq.com
 #define x first
 #define y second
 using namespace std;
-const double eps=1e-8;
-const double pi=acos(-1.0);
 typedef long long ll;
 typedef pair<int,int> pii;
+const signed inf=0x3f3f3f3f;
+const double eps=1e-8;
+const double pi=acos(-1.0);
 template<class T>int chkmin(T &a,T b){return a>b?a=b,1:0;}
 template<class T>int chkmax(T &a,T b){return a<b?a=b,1:0;}
 template<class T>T sqr(T a){return a*a;}
@@ -94,35 +95,37 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-int sg[105][105],a[205],t;
+int q[10005],*ed=q+10004,*l=q,*r=ed;
+int beg[10005],to[20005],lst[20005],w[20005],e,t[10005],inq[10005],dis[10005];
+void add(int u,int v,int c){to[++e]=v;lst[e]=beg[u];beg[u]=e;w[e]=c;}
+
+int *nxt(int *x){return x==ed?q:x+1;}
+#define inc(x) (x=nxt(x))
+int SPFA(int n){
+	for(int i=1;i<=n;++i){t[i]=1;inq[i]=1;*inc(r)=i;}
+	while(l!=nxt(r)){
+		inq[*l]=0;
+		for(int i=beg[*l];i;i=lst[i])if(chkmin(dis[to[i]],dis[*l]+w[i])){
+			if(!inq[to[i]]){*inc(r)=to[i];inq[to[i]]=1;if((++t[to[i]])>=5000)return 0;}
+		}
+		inc(l);
+	}
+	return 1;
+}
 int main(){
 #ifdef cnyali_lk
-	freopen("2148.in","r",stdin);
-	freopen("2148.out","w",stdout);
+	freopen("1993.in","r",stdin);
+	freopen("1993.out","w",stdout);
 #endif
-	for(int s=2,j;s<=100;++s)for(int i=1;i<=50 && i<=s;++i){
-		j=s-i;
-		if(!(1<=j && j<=50))continue;
-		t=0;
-		if(i>1)for(int k=1;k<i;++k,++t)a[t]=sg[k][i-k];
-		if(j>1)for(int k=1;k<j;++k,++t)a[t]=sg[k][j-k];
-		sort(a,a+t);
-		t=unique(a,a+t)-a;
-		a[t]=-1;
-		for(int k=0;k<=t;++k)if(a[k]!=k){sg[i][j]=k;break;}
-//		printf("%d%c",sg[i][j],j==10?'\n':' ');
+	int n,m,tp,u,v,w;
+	read(n,m);
+	for(int i=1;i<=m;++i){
+		read(tp,u,v);
+		if(tp==1){read(w);add(u,v,-w);}
+		else if(tp==2){read(w);add(v,u,w);}
+		else{add(u,v,0);add(v,u,0);}
 	}
-	for(int i=1;i<=20;++i)for(int j=1;j<=20;++j)printf("%d%c",sg[i][j],j==20?'\n':' ');
-	read(t);
-	for(;t;--t){
-		int n,s=0,x,y;
-		read(n);
-		for(int i=1;i<n;i+=2){
-			read(x,y);
-			s^=sg[x][y];
-		}
-		write(s?"YES\n":"NO\n");
-	}
+	if(SPFA(n))write("Yes\n");else write("No\n");
 	return 0;
 }
 

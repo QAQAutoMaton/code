@@ -1,7 +1,7 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 2148.cpp
+PROG: A.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
@@ -12,10 +12,11 @@ Mail: cnyalilk@vip.qq.com
 #define x first
 #define y second
 using namespace std;
-const double eps=1e-8;
-const double pi=acos(-1.0);
 typedef long long ll;
 typedef pair<int,int> pii;
+const signed inf=0x3f3f3f3f;
+const double eps=1e-8;
+const double pi=acos(-1.0);
 template<class T>int chkmin(T &a,T b){return a>b?a=b,1:0;}
 template<class T>int chkmax(T &a,T b){return a<b?a=b,1:0;}
 template<class T>T sqr(T a){return a*a;}
@@ -94,34 +95,48 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-int sg[105][105],a[205],t;
+int inv[100005],n,w[100005];
+const int p=1000000007;
+int sum(int a,int b){return (a+=b)>=p?a-p:a;}
+struct bit{
+	int s[100005];
+	void Add(int x,int y){for(;x<=n;x+=x&-x)s[x]=sum(s[x],y);}
+	int Sum(int x){
+		int y=0;for(;x;x^=x&-x)y=sum(y,s[x]);
+		return y;
+	}
+	int Sum(int l,int r){return sum(Sum(r),p-Sum(l-1));}
+}a,b;
+void Query(int l,int r){
+	int bs=a.Sum(l,r),as=b.Sum(l,r),in=inv[r-l+1];
+	write(sum((ll)as*in%p,p-ll(bs)*bs%p*in%p*in%p),'\n');
+}
 int main(){
 #ifdef cnyali_lk
-	freopen("2148.in","r",stdin);
-	freopen("2148.out","w",stdout);
+	freopen("A.in","r",stdin);
+	freopen("A.out","w",stdout);
 #endif
-	for(int s=2,j;s<=100;++s)for(int i=1;i<=50 && i<=s;++i){
-		j=s-i;
-		if(!(1<=j && j<=50))continue;
-		t=0;
-		if(i>1)for(int k=1;k<i;++k,++t)a[t]=sg[k][i-k];
-		if(j>1)for(int k=1;k<j;++k,++t)a[t]=sg[k][j-k];
-		sort(a,a+t);
-		t=unique(a,a+t)-a;
-		a[t]=-1;
-		for(int k=0;k<=t;++k)if(a[k]!=k){sg[i][j]=k;break;}
-//		printf("%d%c",sg[i][j],j==10?'\n':' ');
+	int m,tp,x,y;	
+	read(n,m);
+	inv[1]=1;
+	for(int i=2;i<=n;++i)inv[i]=(ll)(p-p/i)*inv[p%i]%p;
+	for(int i=1;i<=n;++i){
+		read(w[i]);
+		a.Add(i,w[i]);
+		b.Add(i,(ll)w[i]*w[i]%p);
 	}
-	for(int i=1;i<=20;++i)for(int j=1;j<=20;++j)printf("%d%c",sg[i][j],j==20?'\n':' ');
-	read(t);
-	for(;t;--t){
-		int n,s=0,x,y;
-		read(n);
-		for(int i=1;i<n;i+=2){
-			read(x,y);
-			s^=sg[x][y];
+	for(;m;--m){
+		read(tp,x,y);
+		if(tp==1){
+			a.Add(x,p-w[x]);
+			b.Add(x,p-(ll)w[x]*w[x]%p);
+			w[x]=y;
+			a.Add(x,w[x]);
+			b.Add(x,(ll)w[x]*w[x]%p);
 		}
-		write(s?"YES\n":"NO\n");
+		else{
+			Query(x,y);			
+		}
 	}
 	return 0;
 }

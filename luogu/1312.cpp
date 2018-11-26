@@ -1,7 +1,7 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 2148.cpp
+PROG: 1312.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
@@ -12,10 +12,11 @@ Mail: cnyalilk@vip.qq.com
 #define x first
 #define y second
 using namespace std;
-const double eps=1e-8;
-const double pi=acos(-1.0);
 typedef long long ll;
 typedef pair<int,int> pii;
+const int inf=0x3f3f3f3f;
+const double eps=1e-8;
+const double pi=acos(-1.0);
 template<class T>int chkmin(T &a,T b){return a>b?a=b,1:0;}
 template<class T>int chkmax(T &a,T b){return a<b?a=b,1:0;}
 template<class T>T sqr(T a){return a*a;}
@@ -43,34 +44,26 @@ namespace io {
 		if (oS == oT) flush ();
 	}
 	// input a signed integer
-	inline void read (signed &x) {
+	inline int read (int &x) {
 		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
 		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
+		return 1;
 	}
-
-	inline void read (long long &x) {
-		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
-		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
-	}
-	inline void read (char &x) {
+	inline int read (char &x) {
 		x=gc();
+		return 1;
 	}
-	inline void read(char *x){
+	inline int read(char *x){
 		while((*x=gc())=='\n' || *x==' '||*x=='\r');
 		while(!(*x=='\n'||*x==' '||*x=='\r'))*(++x)=gc();
+		return 1;
 	}
 	template<typename A,typename ...B>
-	inline void read(A &x,B &...y){
-		read(x);read(y...);
+	inline int read(A &x,B &...y){
+		return read(x)+read(y...);
 	}
 	// print a signed integer
-	inline void write (signed x) {
-		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
-		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
-		while (qr) putc (qu[qr --]);
-	}
-
-	inline void write (long long x) {
+	inline void write (int x) {
 		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
 		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
 		while (qr) putc (qu[qr --]);
@@ -94,35 +87,60 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-int sg[105][105],a[205],t;
+struct game{
+	int a[5][7],rm[5][7];
+	int *operator[](int x){return a[x];}
+	int Judge(){
+		for(int i=0,j,k;i<5;++i){
+			for(j=0,k=0;j<7;++j){
+				if(a[i][j]){a[i][k]=a[i][j];++k;}
+			}
+			for(;k<7;++k)a[i][k]=0;
+		}
+		for(int i=0;i<3;++i)for(int j=0;j<7;++j)if(a[i][j]&&a[i][j]==a[i+1][j] && a[i+1][j]==a[i+2][j])rm[i][j]=rm[i+1][j]=rm[i+2][j]=1;
+		for(int i=0;i<5;++i)for(int j=0;j<5;++j)if(a[i][j]&&a[i][j]==a[i][j+1] && a[i][j+1]==a[i][j+2])rm[i][j]=rm[i][j+1]=rm[i][j+2]=1;
+		int c=0;
+		for(int i=0;i<5;++i)for(int j=0;j<7;++j)if(rm[i][j])a[i][j]=rm[i][j]=0,c=1;
+		return c;
+	}
+	void mv(int x,int y,int z){
+		swap(a[x][y],a[x+z][y]);
+		while(Judge());
+	}
+	int chk(){
+		for(int i=0;i<5;++i)for(int j=0;j<7;++j){
+			if(a[i][j])return 0;
+		}
+		return 1;
+	}
+};
+game f[6];
+int stx[6],sty[6],stfx[6],n;
+void dfs(int x){
+	if(x==n){
+		if(f[x].chk()){
+			for(int i=0;i<n;++i)write(stx[i],' ',sty[i],' ',stfx[i],'\n');
+			exit(0);
+		}
+		return;
+	}
+	for(int i=0;i<5;++i)for(int j=0;j<7;++j)if(f[x][i][j]){
+		stx[x]=i;sty[x]=j;
+		if(i-4){stfx[x]=1;f[x+1]=f[x];f[x+1].mv(i,j,1);dfs(x+1);}
+		if(i && !f[x][i-1][j]){stfx[x]=-1;f[x+1]=f[x];f[x+1].mv(i,j,-1);dfs(x+1);}
+	}	
+}
 int main(){
 #ifdef cnyali_lk
-	freopen("2148.in","r",stdin);
-	freopen("2148.out","w",stdout);
+	freopen("1312.in","r",stdin);
+	freopen("1312.out","w",stdout);
 #endif
-	for(int s=2,j;s<=100;++s)for(int i=1;i<=50 && i<=s;++i){
-		j=s-i;
-		if(!(1<=j && j<=50))continue;
-		t=0;
-		if(i>1)for(int k=1;k<i;++k,++t)a[t]=sg[k][i-k];
-		if(j>1)for(int k=1;k<j;++k,++t)a[t]=sg[k][j-k];
-		sort(a,a+t);
-		t=unique(a,a+t)-a;
-		a[t]=-1;
-		for(int k=0;k<=t;++k)if(a[k]!=k){sg[i][j]=k;break;}
-//		printf("%d%c",sg[i][j],j==10?'\n':' ');
+	read(n);
+	for(int i=0,j,x;i<5;++i){
+		for(j=0,read(x);x;++j,read(x))f[0][i][j]=x;
 	}
-	for(int i=1;i<=20;++i)for(int j=1;j<=20;++j)printf("%d%c",sg[i][j],j==20?'\n':' ');
-	read(t);
-	for(;t;--t){
-		int n,s=0,x,y;
-		read(n);
-		for(int i=1;i<n;i+=2){
-			read(x,y);
-			s^=sg[x][y];
-		}
-		write(s?"YES\n":"NO\n");
-	}
+	dfs(0);
+	write("-1\n");
 	return 0;
 }
 

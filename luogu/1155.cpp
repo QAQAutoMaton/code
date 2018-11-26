@@ -1,7 +1,7 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 2148.cpp
+PROG: 1155.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
@@ -12,10 +12,11 @@ Mail: cnyalilk@vip.qq.com
 #define x first
 #define y second
 using namespace std;
-const double eps=1e-8;
-const double pi=acos(-1.0);
 typedef long long ll;
 typedef pair<int,int> pii;
+const signed inf=0x3f3f3f3f;
+const double eps=1e-8;
+const double pi=acos(-1.0);
 template<class T>int chkmin(T &a,T b){return a>b?a=b,1:0;}
 template<class T>int chkmax(T &a,T b){return a<b?a=b,1:0;}
 template<class T>T sqr(T a){return a*a;}
@@ -43,12 +44,7 @@ namespace io {
 		if (oS == oT) flush ();
 	}
 	// input a signed integer
-	inline void read (signed &x) {
-		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
-		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
-	}
-
-	inline void read (long long &x) {
+	inline void read (int &x) {
 		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
 		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
 	}
@@ -64,13 +60,7 @@ namespace io {
 		read(x);read(y...);
 	}
 	// print a signed integer
-	inline void write (signed x) {
-		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
-		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
-		while (qr) putc (qu[qr --]);
-	}
-
-	inline void write (long long x) {
+	inline void write (int x) {
 		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
 		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
 		while (qr) putc (qu[qr --]);
@@ -94,35 +84,59 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-int sg[105][105],a[205],t;
+int a[1005],mn[1005];
+int col[1005];
+vector<int> to[1005];
+void dfs(int x,int c){
+	if(~col[x]){if(col[x]!=c){write("0\n");exit(0);}return;}
+	col[x]=c;
+	for(int i=0,t=to[x].size();i<t;++i)dfs(to[x][i],c^1);
+}
+int s[2][1005],top[2],pos=1;
+void push(int x,int y){
+	s[x][++top[x]]=y;
+	write(char('a'+2*x),' ');
+} 
+int pop(int x){
+	if(s[x][top[x]]==pos){
+		write(char('b'+2*x),' ');
+		--top[x];
+		++pos;
+		return 1;
+	}
+	return 0;
+} 
 int main(){
 #ifdef cnyali_lk
-	freopen("2148.in","r",stdin);
-	freopen("2148.out","w",stdout);
+	freopen("1155.in","r",stdin);
+	freopen("1155.out","w",stdout);
 #endif
-	for(int s=2,j;s<=100;++s)for(int i=1;i<=50 && i<=s;++i){
-		j=s-i;
-		if(!(1<=j && j<=50))continue;
-		t=0;
-		if(i>1)for(int k=1;k<i;++k,++t)a[t]=sg[k][i-k];
-		if(j>1)for(int k=1;k<j;++k,++t)a[t]=sg[k][j-k];
-		sort(a,a+t);
-		t=unique(a,a+t)-a;
-		a[t]=-1;
-		for(int k=0;k<=t;++k)if(a[k]!=k){sg[i][j]=k;break;}
-//		printf("%d%c",sg[i][j],j==10?'\n':' ');
+	int n,x;
+	read(n);
+	for(int i=1;i<=n;++i){
+		read(a[i]);
 	}
-	for(int i=1;i<=20;++i)for(int j=1;j<=20;++j)printf("%d%c",sg[i][j],j==20?'\n':' ');
-	read(t);
-	for(;t;--t){
-		int n,s=0,x,y;
-		read(n);
-		for(int i=1;i<n;i+=2){
-			read(x,y);
-			s^=sg[x][y];
+	mn[n+1]=inf;
+	for(int i=n;i;--i)mn[i]=min(mn[i+1],a[i]);
+	for(int i=1;i<=n;++i)for(int j=i+1;j<=n;++j)if(a[i]<a[j] && mn[j+1]<a[i]){to[i].push_back(j);to[j].push_back(i);}
+	for(int i=1;i<=n;++i)col[i]=-1;
+	for(int i=1;i<=n;++i)if(!~col[i])dfs(i,0);
+	col[n+1]=-1;
+/*	for(int i=1;i<=n;++i)write(col[i]);
+	return 0;*/
+	for(int i=1;i<=n;++i){
+		push(col[i],a[i]);
+		if(a[i]==pos){
+			if(col[i]==1)while(!col[i+1] && s[0][top[0]]>a[i+1]){++i;push(0,a[i]);}
+			pop(col[i]);
+			while(s[0][top[0]]==pos || s[1][top[1]]==pos)pop(0)||pop(1);
 		}
-		write(s?"YES\n":"NO\n");
 	}
+	for(;pos<=n;){
+		while(pop(0));
+		while(pop(1));
+	}
+	
 	return 0;
 }
 

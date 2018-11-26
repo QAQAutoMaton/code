@@ -1,7 +1,7 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 2148.cpp
+PROG: 2515.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
@@ -12,10 +12,11 @@ Mail: cnyalilk@vip.qq.com
 #define x first
 #define y second
 using namespace std;
-const double eps=1e-8;
-const double pi=acos(-1.0);
 typedef long long ll;
 typedef pair<int,int> pii;
+const signed inf=0x3f3f3f3f;
+const double eps=1e-8;
+const double pi=acos(-1.0);
 template<class T>int chkmin(T &a,T b){return a>b?a=b,1:0;}
 template<class T>int chkmax(T &a,T b){return a<b?a=b,1:0;}
 template<class T>T sqr(T a){return a*a;}
@@ -94,35 +95,48 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-int sg[105][105],a[205],t;
+int bel[105],w[105],v[105],pre[105],f[105][505],fa[105],vis[105],n,m;
+int t;
+vector<int> son[105];
+void findC(int x){
+	bel[x]=x;
+	++t;
+	while(!vis[x]){vis[x]=t;x=pre[x];}
+	if(vis[x]==t){
+		int r=x;
+		for(x=pre[x];x!=r;x=pre[x]){bel[x]=r;w[r]+=w[x];v[r]+=v[x];}
+	}
+}
+void dfs(int x){
+	for(auto i:son[x])if(w[i]<=m){
+		for(int j=0;j<w[i];++j)f[i][j]=-inf;
+		for(int j=w[i];j<=m;++j)f[i][j]=f[x][j-w[i]]+v[i];
+		dfs(i);
+		for(int j=0;j<=m;++j)chkmax(f[x][j],f[i][j]);
+	}
+}
 int main(){
 #ifdef cnyali_lk
-	freopen("2148.in","r",stdin);
-	freopen("2148.out","w",stdout);
+	freopen("2515.in","r",stdin);
+	freopen("2515.out","w",stdout);
 #endif
-	for(int s=2,j;s<=100;++s)for(int i=1;i<=50 && i<=s;++i){
-		j=s-i;
-		if(!(1<=j && j<=50))continue;
-		t=0;
-		if(i>1)for(int k=1;k<i;++k,++t)a[t]=sg[k][i-k];
-		if(j>1)for(int k=1;k<j;++k,++t)a[t]=sg[k][j-k];
-		sort(a,a+t);
-		t=unique(a,a+t)-a;
-		a[t]=-1;
-		for(int k=0;k<=t;++k)if(a[k]!=k){sg[i][j]=k;break;}
-//		printf("%d%c",sg[i][j],j==10?'\n':' ');
+	read(n,m);
+	for(int i=1;i<=n;++i)read(w[i]);
+	for(int i=1;i<=n;++i)read(v[i]);
+	for(int i=1;i<=n;++i)read(pre[i]);
+	vis[0]=1;
+	for(int i=1;i<=n;++i)bel[i]=i;
+	t=1;
+	for(int i=1;i<=n;++i)if(!vis[i])findC(i);
+	for(int i=1;i<=n;++i)if(bel[i]==i){
+		if(bel[pre[i]]!=i)
+			fa[i]=bel[pre[i]];
+		else 
+			fa[i]=0;
+		son[fa[i]].push_back(i);
 	}
-	for(int i=1;i<=20;++i)for(int j=1;j<=20;++j)printf("%d%c",sg[i][j],j==20?'\n':' ');
-	read(t);
-	for(;t;--t){
-		int n,s=0,x,y;
-		read(n);
-		for(int i=1;i<n;i+=2){
-			read(x,y);
-			s^=sg[x][y];
-		}
-		write(s?"YES\n":"NO\n");
-	}
+	dfs(0);
+	write(f[0][m],'\n');
 	return 0;
 }
 

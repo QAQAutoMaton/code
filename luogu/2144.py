@@ -7,11 +7,15 @@ Mail: cnyalilk@vip.qq.com
 """
 import os,math,random,io
 n=int(input())
-f=1
-s=1
-ans=0
-for i in range(n):
-    ans+=f*(n-i)*(n-i)
-    f=f+s
-    s=s+f
-print(f+n)
+f=[1]
+g=[0]
+for i in range(1,n+1):
+    sf=0
+    sg=0
+    for j in range(i):
+        sf+=f[j]*(i-j)
+        sg+=f[j]*(i-j)*(i-j)
+    f.append(sf)
+    g.append(sg)
+
+print(g[n])

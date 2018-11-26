@@ -1,7 +1,7 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 2148.cpp
+PROG: f.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
@@ -12,10 +12,11 @@ Mail: cnyalilk@vip.qq.com
 #define x first
 #define y second
 using namespace std;
-const double eps=1e-8;
-const double pi=acos(-1.0);
 typedef long long ll;
 typedef pair<int,int> pii;
+const int inf=0x3f3f3f3f;
+const double eps=1e-8;
+const double pi=acos(-1.0);
 template<class T>int chkmin(T &a,T b){return a>b?a=b,1:0;}
 template<class T>int chkmax(T &a,T b){return a<b?a=b,1:0;}
 template<class T>T sqr(T a){return a*a;}
@@ -43,12 +44,7 @@ namespace io {
 		if (oS == oT) flush ();
 	}
 	// input a signed integer
-	inline void read (signed &x) {
-		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
-		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
-	}
-
-	inline void read (long long &x) {
+	inline void read (int &x) {
 		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
 		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
 	}
@@ -64,13 +60,7 @@ namespace io {
 		read(x);read(y...);
 	}
 	// print a signed integer
-	inline void write (signed x) {
-		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
-		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
-		while (qr) putc (qu[qr --]);
-	}
-
-	inline void write (long long x) {
+	inline void write (int x) {
 		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
 		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
 		while (qr) putc (qu[qr --]);
@@ -94,35 +84,60 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-int sg[105][105],a[205],t;
+int cnt[300005],a[300005],mxp[300005],pri[11],t;
+int mul[1023],can[1023],dp[1023];
 int main(){
 #ifdef cnyali_lk
-	freopen("2148.in","r",stdin);
-	freopen("2148.out","w",stdout);
+	freopen("f.in","r",stdin);
+	freopen("f.out","w",stdout);
 #endif
-	for(int s=2,j;s<=100;++s)for(int i=1;i<=50 && i<=s;++i){
-		j=s-i;
-		if(!(1<=j && j<=50))continue;
-		t=0;
-		if(i>1)for(int k=1;k<i;++k,++t)a[t]=sg[k][i-k];
-		if(j>1)for(int k=1;k<j;++k,++t)a[t]=sg[k][j-k];
-		sort(a,a+t);
-		t=unique(a,a+t)-a;
-		a[t]=-1;
-		for(int k=0;k<=t;++k)if(a[k]!=k){sg[i][j]=k;break;}
-//		printf("%d%c",sg[i][j],j==10?'\n':' ');
+	int n,x;
+	read(n);
+	for(int i=1;i<=n;++i){
+		read(a[i]);
+		cnt[a[i]]=1;
 	}
-	for(int i=1;i<=20;++i)for(int j=1;j<=20;++j)printf("%d%c",sg[i][j],j==20?'\n':' ');
-	read(t);
-	for(;t;--t){
-		int n,s=0,x,y;
-		read(n);
-		for(int i=1;i<n;i+=2){
-			read(x,y);
-			s^=sg[x][y];
+	int m=300000;
+	for(int i=2;i<=m;++i)cnt[1]+=cnt[i];
+	for(int i=2;i<=m;++i){
+		if(!mxp[i]){for(int j=i;j<=m;j+=i)mxp[j]=i;}
+		for(int j=i+i;j<=m;j+=i){
+			cnt[i]+=cnt[j];
 		}
-		write(s?"YES\n":"NO\n");
 	}
+	int ans=0x3f3f3f3f,t,tt;
+	for(int i=1;i<=n;++i){
+		t=0;
+		while(a[i]>1){
+			pri[t]=mxp[a[i]];
+			while(!(a[i]%pri[t]))a[i]/=pri[t];
+			++t;
+		}
+		tt=1<<t;
+		mul[0]=1;
+		can[0]=cnt[1];
+		for(int j=1;j<tt;++j){
+			mul[j]=mul[j&(j-1)]*pri[__builtin_ctz(j)];
+			can[j]=cnt[mul[j]];
+		}
+		for(int j=tt-1;~j;--j){
+			dp[j]=0x3f3f3f3f;
+			--can[j];
+			for(int k=j;k;){
+				k=(k-1)&j;
+				can[k]-=can[j];
+			}
+			can[j]=!!can[j];
+		}
+		dp[(1<<t)-1]=0;
+		for(int j=1;j<tt;++j)for(int k=j;k;k=(k-1)&j)can[j]|=can[j-k];
+		for(int j=tt-1;~j;--j){
+			for(int k=j;k;k=(k-1)&j)
+				if(can[tt-k-1])chkmin(dp[j-k],dp[j]+1);
+		}
+		chkmin(ans,dp[0]+1);
+	}
+	write(ans==0x3f3f3f3f?-1:ans,'\n');
 	return 0;
 }
 

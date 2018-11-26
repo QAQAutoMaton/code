@@ -1,7 +1,7 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 2148.cpp
+PROG: B.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
@@ -12,10 +12,11 @@ Mail: cnyalilk@vip.qq.com
 #define x first
 #define y second
 using namespace std;
-const double eps=1e-8;
-const double pi=acos(-1.0);
 typedef long long ll;
 typedef pair<int,int> pii;
+const int inf=0x3f3f3f3f;
+const double eps=1e-8;
+const double pi=acos(-1.0);
 template<class T>int chkmin(T &a,T b){return a>b?a=b,1:0;}
 template<class T>int chkmax(T &a,T b){return a<b?a=b,1:0;}
 template<class T>T sqr(T a){return a*a;}
@@ -43,12 +44,7 @@ namespace io {
 		if (oS == oT) flush ();
 	}
 	// input a signed integer
-	inline void read (signed &x) {
-		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
-		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
-	}
-
-	inline void read (long long &x) {
+	inline void read (int &x) {
 		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
 		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
 	}
@@ -64,13 +60,7 @@ namespace io {
 		read(x);read(y...);
 	}
 	// print a signed integer
-	inline void write (signed x) {
-		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
-		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
-		while (qr) putc (qu[qr --]);
-	}
-
-	inline void write (long long x) {
+	inline void write (int x) {
 		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
 		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
 		while (qr) putc (qu[qr --]);
@@ -94,34 +84,43 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-int sg[105][105],a[205],t;
+int mp[4096],to[4096],a[4096];
 int main(){
 #ifdef cnyali_lk
-	freopen("2148.in","r",stdin);
-	freopen("2148.out","w",stdout);
+	freopen("B.in","r",stdin);
+	freopen("B.out","w",stdout);
 #endif
-	for(int s=2,j;s<=100;++s)for(int i=1;i<=50 && i<=s;++i){
-		j=s-i;
-		if(!(1<=j && j<=50))continue;
-		t=0;
-		if(i>1)for(int k=1;k<i;++k,++t)a[t]=sg[k][i-k];
-		if(j>1)for(int k=1;k<j;++k,++t)a[t]=sg[k][j-k];
-		sort(a,a+t);
-		t=unique(a,a+t)-a;
-		a[t]=-1;
-		for(int k=0;k<=t;++k)if(a[k]!=k){sg[i][j]=k;break;}
-//		printf("%d%c",sg[i][j],j==10?'\n':' ');
-	}
-	for(int i=1;i<=20;++i)for(int j=1;j<=20;++j)printf("%d%c",sg[i][j],j==20?'\n':' ');
-	read(t);
-	for(;t;--t){
-		int n,s=0,x,y;
-		read(n);
-		for(int i=1;i<n;i+=2){
-			read(x,y);
-			s^=sg[x][y];
+	int n,A,B,C,X,x,t;	
+	read(n,A,B,C,X);
+	if(n<4096){
+		x=X;
+		for(int i=0;i<n;++i){
+			a[i]=x=(A*x+B)%c;
 		}
-		write(s?"YES\n":"NO\n");
+		for(int i=0;i<n;++i){
+			b[i]=x=(A*x+B)%c;
+		}
+		for(int i=0;i<n;++i)for(int j=0;j<n;++j)c[i+j]=(c[i+j]+a[i]*b[j])%p;
+		ll ans=0;
+		for(int i=0;i<n;++i)ans^=i*c[i];
+		printf("%d\n",ans);
+	}
+	x=X;
+	while(!mp[x]){
+		a[mp[x]=++t]=x;
+		x=(A*x+B)%c;
+	}
+	for(int i=1;i<t;++i)to[a[i]]=a[i+1];
+	to[a[t]]=x;
+	tt=mp[x];
+	x=X;
+	for(int i=0;i<n;++i)x=to[x];
+	for(int i=tt;i<t;++i){
+		for(int j=
+	}
+	for(int i=0;i<tt;++t){
+
+		for(int j=
 	}
 	return 0;
 }

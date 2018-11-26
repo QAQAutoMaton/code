@@ -1,0 +1,7 @@
+f.cpp: In function ‘int main()’:
+f.cpp:91:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
+  freopen("f.in","r",stdin);
+  ~~~~~~~^~~~~~~~~~~~~~~~~~
+f.cpp:92:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
+  freopen("f.out","w",stdout);
+  ~~~~~~~^~~~~~~~~~~~~~~~~~~~

@@ -1,7 +1,7 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 2148.cpp
+PROG: C.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
@@ -12,10 +12,11 @@ Mail: cnyalilk@vip.qq.com
 #define x first
 #define y second
 using namespace std;
-const double eps=1e-8;
-const double pi=acos(-1.0);
 typedef long long ll;
 typedef pair<int,int> pii;
+const int inf=0x3f3f3f3f;
+const double eps=1e-8;
+const double pi=acos(-1.0);
 template<class T>int chkmin(T &a,T b){return a>b?a=b,1:0;}
 template<class T>int chkmax(T &a,T b){return a<b?a=b,1:0;}
 template<class T>T sqr(T a){return a*a;}
@@ -43,12 +44,7 @@ namespace io {
 		if (oS == oT) flush ();
 	}
 	// input a signed integer
-	inline void read (signed &x) {
-		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
-		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
-	}
-
-	inline void read (long long &x) {
+	inline void read (int &x) {
 		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
 		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
 	}
@@ -64,13 +60,7 @@ namespace io {
 		read(x);read(y...);
 	}
 	// print a signed integer
-	inline void write (signed x) {
-		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
-		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
-		while (qr) putc (qu[qr --]);
-	}
-
-	inline void write (long long x) {
+	inline void write (int x) {
 		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
 		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
 		while (qr) putc (qu[qr --]);
@@ -94,34 +84,49 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-int sg[105][105],a[205],t;
+pii e[2500005];
+vector<int> son[1000005];
+int fa[1000005],siz[1000005];
+int f[1000005];
+void dfs(int x,int fa){
+	f[x]=fa;
+	siz[x]=1;
+	for(auto i:son[x])if(i!=fa){
+		dfs(i,x);
+		siz[x]+=siz[i];
+	}
+}
+int find(int x){return x==fa[x]?x:fa[x]=find(fa[x]);}
 int main(){
 #ifdef cnyali_lk
-	freopen("2148.in","r",stdin);
-	freopen("2148.out","w",stdout);
+	freopen("C.in","r",stdin);
+	freopen("C.out","w",stdout);
 #endif
-	for(int s=2,j;s<=100;++s)for(int i=1;i<=50 && i<=s;++i){
-		j=s-i;
-		if(!(1<=j && j<=50))continue;
-		t=0;
-		if(i>1)for(int k=1;k<i;++k,++t)a[t]=sg[k][i-k];
-		if(j>1)for(int k=1;k<j;++k,++t)a[t]=sg[k][j-k];
-		sort(a,a+t);
-		t=unique(a,a+t)-a;
-		a[t]=-1;
-		for(int k=0;k<=t;++k)if(a[k]!=k){sg[i][j]=k;break;}
-//		printf("%d%c",sg[i][j],j==10?'\n':' ');
+	int n,m,q;
+	read(n,m);
+	for(int i=1;i<=n;++i)fa[i]=i;
+	for(int i=1;i<=m;++i){
+		read(e[i].x,e[i].y);
+		if(find(e[i].x)==find(e[i].y))continue;
+		fa[find(e[i].x)]=find(e[i].y);
+		son[e[i].x].push_back(e[i].y);
+		son[e[i].y].push_back(e[i].x);
 	}
-	for(int i=1;i<=20;++i)for(int j=1;j<=20;++j)printf("%d%c",sg[i][j],j==20?'\n':' ');
-	read(t);
-	for(;t;--t){
-		int n,s=0,x,y;
-		read(n);
-		for(int i=1;i<n;i+=2){
-			read(x,y);
-			s^=sg[x][y];
+	dfs(1,0);
+	read(q);	
+	for(;q;--q){
+		int cnt,ans=0,id,u,v;
+		read(cnt);
+		for(;cnt;--cnt){
+			read(id);
+			u=e[abs(id)].x;	
+			v=e[abs(id)].y;
+			if(id<0)swap(u,v);
+			if(f[u]==v)ans-=siz[u];
+			if(f[v]==u)ans+=siz[v];
 		}
-		write(s?"YES\n":"NO\n");
+		if(ans<0)ans+=n;
+		printf("%d\n",ans);
 	}
 	return 0;
 }

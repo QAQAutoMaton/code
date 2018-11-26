@@ -1,7 +1,7 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 2148.cpp
+PROG: 2149.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
@@ -12,10 +12,11 @@ Mail: cnyalilk@vip.qq.com
 #define x first
 #define y second
 using namespace std;
-const double eps=1e-8;
-const double pi=acos(-1.0);
 typedef long long ll;
 typedef pair<int,int> pii;
+const signed inf=0x3f3f3f3f;
+const double eps=1e-8;
+const double pi=acos(-1.0);
 template<class T>int chkmin(T &a,T b){return a>b?a=b,1:0;}
 template<class T>int chkmax(T &a,T b){return a<b?a=b,1:0;}
 template<class T>T sqr(T a){return a*a;}
@@ -94,35 +95,57 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-int sg[105][105],a[205],t;
+int w[1505][1505],dis1[1505],dis2[1505],dis3[1505],dis4[1505],n,vis[1505];
+void dijkstra(int s,int *dis){
+	for(int i=1;i<=n;++i)dis[i]=inf,vis[i]=0;	
+	dis[s]=0;
+	int x,y;
+	for(int t=n;t;--t){
+		x=inf,y=0;
+		for(int i=1;i<=n;++i)if(!vis[i] && chkmin(x,dis[i]))y=i;
+		if(!y)break;
+		vis[y]=1;
+		for(int i=1;i<=n;++i)chkmin(dis[i],x+w[y][i]);
+	}
+}
+int e[1505][1505],in[1505],f[1505],ans;
+void add(int u,int v){
+	printf("...%d %d\n",u,v);
+	e[u][v]=1;
+	++in[v];
+}
+void topsort(int u){
+	chkmax(ans,f[u]);
+	for(int i=1;i<=n;++i)if(e[u][i]){chkmax(f[i],f[u]+w[u][i]);if(!--in[i])topsort(i);}
+}
 int main(){
 #ifdef cnyali_lk
-	freopen("2148.in","r",stdin);
-	freopen("2148.out","w",stdout);
+	freopen("2149.in","r",stdin);
+	freopen("2149.out","w",stdout);
 #endif
-	for(int s=2,j;s<=100;++s)for(int i=1;i<=50 && i<=s;++i){
-		j=s-i;
-		if(!(1<=j && j<=50))continue;
-		t=0;
-		if(i>1)for(int k=1;k<i;++k,++t)a[t]=sg[k][i-k];
-		if(j>1)for(int k=1;k<j;++k,++t)a[t]=sg[k][j-k];
-		sort(a,a+t);
-		t=unique(a,a+t)-a;
-		a[t]=-1;
-		for(int k=0;k<=t;++k)if(a[k]!=k){sg[i][j]=k;break;}
-//		printf("%d%c",sg[i][j],j==10?'\n':' ');
+	int u,v,c,s1,t1,s2,t2,m; 
+	read(n,m);
+	read(s1,t1,s2,t2);
+	for(int i=1;i<=n;++i)for(int j=1;j<=n;++j)w[i][j]=(i!=j)*inf;
+	for(int i=1;i<=m;++i){
+		read(u,v,c);	
+		chkmin(w[u][v],c);
+		chkmin(w[v][u],c);
 	}
-	for(int i=1;i<=20;++i)for(int j=1;j<=20;++j)printf("%d%c",sg[i][j],j==20?'\n':' ');
-	read(t);
-	for(;t;--t){
-		int n,s=0,x,y;
-		read(n);
-		for(int i=1;i<n;i+=2){
-			read(x,y);
-			s^=sg[x][y];
-		}
-		write(s?"YES\n":"NO\n");
-	}
+	dijkstra(s1,dis1);
+	dijkstra(t1,dis2);
+	dijkstra(s2,dis3);
+	dijkstra(t2,dis4);
+	for(int i=1;i<=n;++i)printf("%d %d %d %d\n",dis1[i],dis2[i],dis3[i],dis4[i]);
+	for(int i=1;i<=n;++i)for(int j=1;j<=n;++j)if(i!=j
+			&& (dis1[i]+w[i][j]==dis1[j]&&dis2[j]+w[i][j]==dis2[i] || dis1[j]+w[i][j]==dis1[i]&&dis2[i]+w[i][j]==dis2[j])
+			&& (dis3[i]+w[i][j]==dis3[j]&&dis4[j]+w[i][j]==dis4[i])
+			)
+		add(i,j);
+	else printf("[%d-%d]%d%d%d%d%d\n",i,j,i!=j,dis1[i]+w[i][j]==dis1[j],dis2[j]+w[i][j]==dis2[i],dis3[i]+w[i][j]==dis3[j],dis4[j]+w[i][j]==dis4[i]
+			);
+	for(int i=1;i<=n;++i)if(!in[i])topsort(i);
+	printf("%d\n",ans);
 	return 0;
 }
 

@@ -1,38 +1,39 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 2148.cpp
+PROG: d.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
 #define debug(...) fprintf(stderr,__VA_ARGS__)
-#define DEBUG printf("Passing [%s] in LINE %d\n",__FUNCTION__,__LINE__)
-#define Debug debug("Passing [%s] in LINE %d\n",__FUNCTION__,__LINE__)
+#define DEBUG printf("Passing [%s] in LINE %lld\n",__FUNCTION__,__LINE__)
+#define Debug debug("Passing [%s] in LINE %lld\n",__FUNCTION__,__LINE__)
 #define all(x) x.begin(),x.end()
 #define x first
 #define y second
 using namespace std;
+typedef long long ll;
+typedef pair<ll,ll> pii;
+const ll inf=0x3f3f3f3f;
 const double eps=1e-8;
 const double pi=acos(-1.0);
-typedef long long ll;
-typedef pair<int,int> pii;
-template<class T>int chkmin(T &a,T b){return a>b?a=b,1:0;}
-template<class T>int chkmax(T &a,T b){return a<b?a=b,1:0;}
+template<class T>ll chkmin(T &a,T b){return a>b?a=b,1:0;}
+template<class T>ll chkmax(T &a,T b){return a<b?a=b,1:0;}
 template<class T>T sqr(T a){return a*a;}
 template<class T>T mmin(T a,T b){return a<b?a:b;}
 template<class T>T mmax(T a,T b){return a>b?a:b;}
 template<class T>T aabs(T a){return a<0?-a:a;}
-template<class T>int dcmp(T a,T b){return a>b;}
-template<int *a>int cmp_a(int x,int y){return a[x]<a[y];}
+template<class T>ll dcmp(T a,T b){return a>b;}
+template<ll *a>ll cmp_a(ll x,ll y){return a[x]<a[y];}
 #define min mmin
 #define max mmax
 #define abs aabs
 namespace io {
-	const int SIZE = (1 << 21) + 1;
-	char ibuf[SIZE], *iS, *iT, obuf[SIZE], *oS = obuf, *oT = oS + SIZE - 1, c, qu[55]; int f, qr;
+	const ll SIZE = (1 << 21) + 1;
+	char ibuf[SIZE], *iS, *iT, obuf[SIZE], *oS = obuf, *oT = oS + SIZE - 1, c, qu[55]; ll f, qr;
 	// getchar
 	#define gc() (iS == iT ? (iT = (iS = ibuf) + fread (ibuf, 1, SIZE, stdin), (iS == iT ? EOF : *iS ++)) : *iS ++)
-	// print the remaining part
+	// prll the remaining part
 	inline void flush () {
 		fwrite (obuf, 1, oS - obuf, stdout);
 		oS = obuf;
@@ -42,13 +43,8 @@ namespace io {
 		*oS ++ = x;
 		if (oS == oT) flush ();
 	}
-	// input a signed integer
-	inline void read (signed &x) {
-		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
-		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
-	}
-
-	inline void read (long long &x) {
+	// input a signed lleger
+	inline void read (ll &x) {
 		for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
 		for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15); x *= f;
 	}
@@ -63,14 +59,8 @@ namespace io {
 	inline void read(A &x,B &...y){
 		read(x);read(y...);
 	}
-	// print a signed integer
-	inline void write (signed x) {
-		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
-		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
-		while (qr) putc (qu[qr --]);
-	}
-
-	inline void write (long long x) {
+	// prll a signed lleger
+	inline void write (ll x) {
 		if (!x) putc ('0'); if (x < 0) putc ('-'), x = -x;
 		while (x) qu[++ qr] = x % 10 + '0',  x /= 10;
 		while (qr) putc (qu[qr --]);
@@ -94,35 +84,29 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-int sg[105][105],a[205],t;
+ll a[17][100005],qaq[17][100005],it[17];
 int main(){
 #ifdef cnyali_lk
-	freopen("2148.in","r",stdin);
-	freopen("2148.out","w",stdout);
+	freopen("d.in","r",stdin);
+	freopen("d.out","w",stdout);
 #endif
-	for(int s=2,j;s<=100;++s)for(int i=1;i<=50 && i<=s;++i){
-		j=s-i;
-		if(!(1<=j && j<=50))continue;
-		t=0;
-		if(i>1)for(int k=1;k<i;++k,++t)a[t]=sg[k][i-k];
-		if(j>1)for(int k=1;k<j;++k,++t)a[t]=sg[k][j-k];
-		sort(a,a+t);
-		t=unique(a,a+t)-a;
-		a[t]=-1;
-		for(int k=0;k<=t;++k)if(a[k]!=k){sg[i][j]=k;break;}
-//		printf("%d%c",sg[i][j],j==10?'\n':' ');
-	}
-	for(int i=1;i<=20;++i)for(int j=1;j<=20;++j)printf("%d%c",sg[i][j],j==20?'\n':' ');
-	read(t);
-	for(;t;--t){
-		int n,s=0,x,y;
-		read(n);
-		for(int i=1;i<n;i+=2){
-			read(x,y);
-			s^=sg[x][y];
+	ll n,m,s=0;
+	read(n,m);
+	for(ll i=1;i<=m;++i)for(ll j=1;j<=n;++j){read(a[i][j]);qaq[i][a[i][j]]=j;}
+	for(ll i=1,j;i<=n;i=j+1){
+		j=i;
+		for(ll k=2;k<=m;++k)it[k]=qaq[k][a[1][i]];
+		int ok=1;
+		while(1){
+			if(j==n)break;
+			for(ll k=2;k<=m;++k)if(a[k][it[k]+1]!=a[1][j+1])ok=0;
+			if(!ok)break;
+			for(ll k=2;k<=m;++k)++it[k];
+			++j;
 		}
-		write(s?"YES\n":"NO\n");
+		s+=(j-i+1)*(j-i+2)>>1;
 	}
+	printf("%lld\n",s);
 	return 0;
 }
 
