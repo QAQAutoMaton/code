@@ -1,7 +1,7 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 4198.cpp
+PROG: 4113.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
@@ -95,78 +95,38 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-struct frac{
-	ll a,b;
-	frac(ll x=0,ll y=1){a=x;b=y;}	
-	bool operator ==(frac other){
-		return a*other.b == other.a*b;
-	}
-	bool operator <(frac other){
-		return a*other.b < other.a*b;
-	}
-	bool operator >(frac other){
-		return a*other.b > other.a*b;
-	}
-	bool operator <=(frac other){
-		return a*other.b <= other.a*b;
-	}
-	bool operator >=(frac other){
-		return a*other.b >= other.a*b;
-	}
+int pre[2000005],ppre[2000005],ans[2000005],a[2000005];
+vector<pii> asks[2000005];
+int n,m,c,l,r;
+struct BIT{
+	int s[2000005];
+#define lowbit(x) (x&(-(x)))
+	void add(int x,int y){for(;x<=n;x+=lowbit(x))s[x]+=y;}
+	int sum(int x){int y=0;for(;x;x^=lowbit(x))y+=s[x];return y;}
 };
-struct smt{
-	frac mx;		
-	int len,ls,rs;
-	smt *l,*r;
-	int push_up(frac a){
-		if(ls==rs){return a<mx;}	
-		else return l->mx<=a?r->push_up(a):l->push_up(a)+len-l->len;
-	}
-	void pushup(){
-		mx=max(l->mx,r->mx);
-		len=l->len+r->push_up(l->mx);
-	}
-	smt(int la,int ra){
-		ls=la;rs=ra;
-		if(ls==rs){
-			mx.b=la;
-			len=1;
-			l=r=0;
-		}
-		else{
-			int mid=(ls+rs)>>1;
-			l=new smt(ls,mid);
-			r=new smt(mid+1,rs);
-			pushup();
-		}
-	}
-	void update(int x,int y){
-		if(ls==rs){
-			mx.a=y;
-			return;
-		}
-		if(x<=l->rs)l->update(x,y);	
-		else r->update(x,y);
-		pushup();
-	}
-};
-smt *r;
-int a[100005];
+BIT bit;
+
 int main(){
 #ifdef cnyali_lk
-	freopen("4198.in","r",stdin);
-	freopen("4198.out","w",stdout);
+	freopen("4113.in","r",stdin);
+	freopen("4113.out","w",stdout);
 #endif
-	int n,m,x;
-	read(n,m);
-	r=new smt(1,n);
-	for(;m;--m){
-		read(x);
-		read(a[x]);
-		r->update(x,a[x]);
-		if(a[1]==0)write(r->len-1,'\n');
-		else write(r->len,'\n');
+	read(n,c,m);
+	for(int i=1;i<=n;++i){
+		read(a[i]);
 	}
+	for(int i=1;i<=m;++i){
+		read(l,r);	
+		asks[r].push_back(make_pair(l,i));
+	}
+	for(int i=1;i<=c;++i)pre[i]=ppre[i]=1;
+	for(int i=1;i<=n;++i){
+		bit.add(ppre[a[i]],1);	
+		bit.add(ppre[a[i]]=pre[a[i]],-1);	
+		pre[a[i]]=i+1;
+		for(auto s:asks[i])ans[s.y]=bit.sum(s.x);
+	}
+	for(int i=1;i<=m;++i)printf("%d\n",ans[i]);
 	return 0;
 }
 
