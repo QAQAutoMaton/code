@@ -96,7 +96,7 @@ using io :: read;
 using io :: putc;
 using io :: write;
 const ll p=998244353;
-ll n,m,to[400055],lst[400055],beg[100005],e,a[200005][2][2],c[100005],d[100005],del[100005],delpoll[100005];	
+ll n,m,to[400055],lst[400055],beg[100005],e,a[200005][2][2],c[100005],d[100005],del[200005],delpoll[100005];	
 void add(ll u,ll v){to[++e]=v;lst[e]=beg[u];beg[u]=e;}
 ll deg[100005];
 ll q[100005],*l=q+1,*r=q;
@@ -121,17 +121,19 @@ int main(){
 	}
 	while(l<=r){
 		if(!deg[*l])break;
-		ll x;
+		ll x=0;
+		
 		for(ll i=beg[*l];i;i=lst[i])if(!del[i>>1]){
+			++x;
 			del[i>>1]=1;
 			if((--deg[to[i]])==1)*(++r)=to[i];
 			if(i&1){
-				c[to[i]]*=c[*l]*a[i>>1][1][1]+d[*l]*a[i>>1][0][1];
-				d[to[i]]*=c[*l]*a[i>>1][1][0]+d[*l]*a[i>>1][0][0];
+				c[to[i]]*=(c[*l]*a[i>>1][1][1]+d[*l]*a[i>>1][0][1])%p;
+				d[to[i]]*=(c[*l]*a[i>>1][1][0]+d[*l]*a[i>>1][0][0])%p;
 			}
 			else{
-				c[to[i]]*=c[*l]*a[i>>1][1][1]+d[*l]*a[i>>1][1][0];
-				d[to[i]]*=c[*l]*a[i>>1][0][1]+d[*l]*a[i>>1][0][0];
+				c[to[i]]*=(c[*l]*a[i>>1][1][1]+d[*l]*a[i>>1][1][0])%p;
+				d[to[i]]*=(c[*l]*a[i>>1][0][1]+d[*l]*a[i>>1][0][0])%p;
 			}
 			c[to[i]]%=p;
 			d[to[i]]%=p;
@@ -141,6 +143,7 @@ int main(){
 	}
 	for(ll i=1;i<=n;++i)if(deg[i]==2){
 		ll t=0;
+
 		for(ll j=beg[i];j;j=lst[j]){
 			if(!del[j>>1]){
 				poll[t]=to[j];
@@ -148,15 +151,22 @@ int main(){
 				w[t][1][1]=a[j>>1][1][1];
 				w[t][1][0]=a[j>>1][1][0];
 				w[t][0][1]=a[j>>1][0][1];
-				if(!(t&1))swap(w[t][0][1],w[t][1][0]);
+				if(!(j&1))swap(w[t][0][1],w[t][1][0]);
 				++t;
-				del[j>>1]=1;
-				--deg[i];
 			}	
 		}		
-
-		add(poll[0],poll[1]);
+		if(poll[0]==i || poll[1]==i)break;
+		for(ll j=beg[i];j;j=lst[j]){
+			if(!del[j>>1]){
+				del[j>>1]=1;
+				--deg[i];
+				--deg[to[j]];
+			}	
+		}		
 		add(poll[1],poll[0]);
+		add(poll[0],poll[1]);
+		++deg[poll[0]];
+		++deg[poll[1]];
 		a[e>>1][0][0]=(c[i]*w[0][1][0]%p*w[1][1][0]+d[i]*w[0][0][0]%p*w[1][0][0])%p;
 		a[e>>1][0][1]=(c[i]*w[0][1][0]%p*w[1][1][1]+d[i]*w[0][0][0]%p*w[1][0][1])%p;
 		a[e>>1][1][0]=(c[i]*w[0][1][1]%p*w[1][1][0]+d[i]*w[0][0][1]%p*w[1][0][0])%p;
@@ -176,10 +186,6 @@ int main(){
 		w[e][1][1]=a[i][1][1];
 	}
 	ll ans=0,s;
-/*	printf("%lld %lld\n",t,e);
-	for(ll i=0;i<t;++i)printf("%lld %lld\n",c[poll[i]],d[poll[i]]);
-	for(ll i=1;i<=e;++i)
-		printf("%lld %lld %lld %lld %lld %lld\n",u[i],v[i],w[i][0][0],w[i][0][1],w[i][1][0],w[i][1][1]);*/
 	for(ll i=0;i<1<<t;++i){
 		s=1;
 		for(ll j=0;j<t;++j){
