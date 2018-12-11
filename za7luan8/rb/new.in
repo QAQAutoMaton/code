@@ -1,0 +1,11 @@
+{
+	var a:i,b:i,op:s;
+	read a,op,b;
+	if op=='+'{
+		write a,'+',b,'=',a+b;
+	}else{
+		write a,'-',b,'=',a-b;
+	}
+}
+
+1 + 2

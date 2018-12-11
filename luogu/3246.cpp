@@ -1,7 +1,7 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 4338.cpp
+PROG: 3246.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
@@ -95,115 +95,89 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-ll a[400005],fa[400005],son[400005][2],add[400005],hvy[400005],as[400005],ans,w[400005];
-ll beg[400005],to[800005],lst[800005],e,lsa[400005],ffa[400005];
-void ae(ll u,ll v){
-	to[++e]=v;lst[e]=beg[u];beg[u]=e;
+ll a[100005],lg2[100005],mn[19][100005],pre[100005],nxt[100005],fp[100005],fs[100005],ans[100005];
+ll n,q,blk;	
+struct query{
+	ll l,r,blk,id;
+};
+query ask[100005];
+ll cmp(query a,query b){return a.blk<b.blk||a.blk==b.blk && a.r<b.r;}
+ll xmin(ll x,ll y){return a[x]<a[y]?x:y;}
+void getpn(ll x){
+	ll wz=x;
+	for(ll i=18;~i;--i){
+		if(wz>=1<<i && a[mn[i][wz-(1<<i)+1]]>=a[x])wz-=1<<i;
+	}
+	pre[x]=wz;
+	wz=x;
+	for(ll i=18;~i;--i){
+		if(wz+(1<<i)<=n+1 && a[mn[i][wz]]>=a[x])wz+=1<<i;
+	}
+	nxt[x]=wz;
 }
-void rotate(ll x){
-	ll f=fa[x],ff=fa[f],fx=son[f][1]==x;
-	fa[x]=ff;fa[f]=x;
-	if(son[ff][0]==f)son[ff][0]=x;
-	if(son[ff][1]==f)son[ff][1]=x;
-	fa[son[f][fx]=son[x][fx^1]]=f;
-	son[x][fx^1]=f;
-}
-#define ntr(x) (fa[x] && (son[fa[x]][0]==x||son[fa[x]][1]==x))
-void put(ll x,ll y){
-	add[x]+=y;a[x]+=y;
-}
-void push_tag(ll x){
-	if(ntr(x))push_tag(fa[x]);
-	put(son[x][0],add[x]);
-	put(son[x][1],add[x]);
-	add[x]=0;
-}
-void splay(ll x){
-	push_tag(x);
-	while(ntr(x)){
-		ll f=fa[x];
-		if(ntr(f)){
-			if((son[f][1]==x)==(son[fa[f]][1]==f))rotate(f);else rotate(x);
-		}
-		rotate(x);
+void getf(ll x){
+	ll lst=x,now=x;
+	fs[x]=0;
+	while(lst){
+		lst=pre[lst];	
+		fs[x]+=a[now]*(now-lst);
+		now=lst;
+	}
+	lst=x;now=x;
+	fp[x]=0;
+	while(lst<=n){
+		lst=nxt[lst];	
+		fp[x]+=a[now]*(lst-now);
+		now=lst;
 	}
 }
-ll query(ll x){
-	if(!x)return 0;
-	splay(x);
-	return a[x];
+ll qmin(ll l,ll r){
+	ll lg=lg2[r-l+1];
+	return xmin(mn[lg][l],mn[lg][r-(1<<lg)+1]);
 }
-void updheavy(ll x,ll y){
-	splay(x);
-	son[x][1]=0;
-	if(y){
-		splay(y);
-		son[x][1]=y;
-		assert(ffa[y]==x);
-	}
-	hvy[x]=y;
-}
-ll fr(ll x){
-	splay(x);
-	for(;son[x][0];x=son[x][0]);
-	splay(x);
-	return x;
-}
-ll calc(ll x){
-	ll ans=min(query(x)-1,2*(query(x)-max(w[x],query(hvy[x]))));
-	if(ans<0){
-		debug("%lld|%lld,%lld  %lld|%lld\n",x,query(x),w[x],hvy[x],query(hvy[x]));	
-		exit(0);
-	}
+ll fpre(ll l,ll r){
+	ll m1n=qmin(l,r),ans=(r-m1n+1)*a[m1n],nx=nxt[l];	
+	ans+=(nx-l)*a[l];
+	ans+=fp[nx]-fp[m1n];
 	return ans;
 }
-
-void dfs(ll x,ll f){
-	fa[x]=ffa[x]=f;
-	for(ll i=beg[x];i;i=lst[i])if(to[i]!=f){dfs(to[i],x);a[x]+=a[to[i]];}
-	for(ll i=beg[x];i;i=lst[i])if(to[i]!=f && a[x]+1<=2*a[to[i]]){
-		son[x][1]=hvy[x]=to[i];	
-	}
-	ans+=lsa[x]=calc(x);
-	
+ll fsuf(ll l,ll r){
+	ll m1n=qmin(l,r),ans=(m1n-l+1)*a[m1n],pr=pre[r];	
+	ans+=(r-pr)*a[r];
+	ans+=fs[pr]-fs[m1n];
+	return ans;
 }
-void upd(ll x,ll y){
-	ll ffaa;
-	ll cnt=0;
-	ans-=lsa[x];
-	while(x){
-		++cnt;
-		splay(x);	
-		put(son[x][0],y);
-		a[x]+=y;
-		if(hvy[x] && 2*query(hvy[x])<=query(x))updheavy(x,0);
-		ans+=lsa[x]=calc(x);
-		x=fr(x);
-		ffaa=fa[x];
-		if(ffaa){
-			ans-=lsa[ffaa];
-			if(query(x)*2>=query(ffaa)+1)updheavy(ffaa,x);
-		}
-		x=ffaa;
-	}
-} 
 int main(){
 #ifdef cnyali_lk
-	freopen("4338.in","r",stdin);
-	freopen("4338.out","w",stdout);
+	freopen("3246.in","r",stdin);
+	freopen("3246.out","w",stdout);
 #endif
-	ll n,q,x,y;
 	read(n,q);
-	for(ll i=1;i<=n;++i){read(a[i]);w[i]=a[i];}
-	for(ll i=2;i<=n;++i){read(x,y);ae(x,y);ae(y,x);}
-	dfs(1,0);
-	printf("%lld\n",ans);
-	for(;q;--q){
-		read(x,y);	
-		w[x]+=y;
-		upd(x,y);
-		printf("%lld\n",ans);
+	blk=sqrt(n);
+	for(ll i=1;i<=n;++i){read(a[i]);mn[0][i]=i;}
+
+	for(ll i=1;i<=18;++i)for(ll j=1;j+(1<<i)-1<=n;++j)mn[i][j]=xmin(mn[i-1][j],mn[i-1][j+(1<<(i-1))]);
+	for(ll i=1;i<=n;++i)getpn(i);
+	for(ll i=1;i<=n;++i)getf(i);
+	lg2[0]=-1;
+	for(ll i=1;i<=n;++i)lg2[i]=lg2[i>>1]+1;
+	for(ll i=1;i<=q;++i){
+		read(ask[i].l,ask[i].r);
+		ask[i].blk=ask[i].l/blk;
+		ask[i].id=i;
+//		for(ll j=ask[i].l;j<=ask[i].r;++j)ans[i]+=fpre(j,ask[i].r);
 	}
+	
+	sort(ask+1,ask+q+1,cmp);
+	ll l=1,r=1,Ans=fsuf(1,1);
+	for(ll i=1;i<=q;++i){
+		while(r<ask[i].r){++r;Ans+=fsuf(l,r);}
+		while(l>ask[i].l){--l;Ans+=fpre(l,r);}
+		while(r>ask[i].r){Ans-=fsuf(l,r);--r;}
+		while(l<ask[i].l){Ans-=fpre(l,r);++l;}
+		ans[ask[i].id]=Ans;
+	}
+	for(ll i=1;i<=q;++i)printf("%lld\n",ans[i]);
 	return 0;
 }
 
