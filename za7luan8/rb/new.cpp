@@ -100,12 +100,18 @@ char buf[SIZE],*fbuf,*ibuf;
 int readInt(){
 	while(!isdigit(*ibuf))++ibuf;
 	int s=0;
-	for(
+	for(;isdigit(*ibuf);++ibuf)s=s*10+(*ibuf^48);
+	return s;
 }
-map<string,int> types;
-map<string,int> stringvars,intvars;
+int useful(char a){return a!=' ' && a!='\n' && a!='\t';}
+string readString(){
+	while(!useful(*ibuf))++ibuf;
+	string s;
+
+}
+map<string,int> type,stringvars,intvars;
 string sv[1000005];
-int iv[10000005],icnt,scnt;
+int iv[1000005],icnt,scnt;
 int main(){
 #ifdef cnyali_lk
 	freopen("new.in","r",stdin);
