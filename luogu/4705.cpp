@@ -18,8 +18,7 @@ const signed inf=0x3f3f3f3f;
 const double eps=1e-8;
 const double pi=acos(-1.0);
 template<class T>ll chkmin(T &a,T b){return a>b?a=b,1:0;}
-template<class T>ll chkmax(T &a,T b){return a<b?a=b,1:0;}
-template<class T>T sqr(T a){return a*a;}
+template<class T>ll chkmax(T &a,T b){return a<b?a=b,1:0;} template<class T>T sqr(T a){return a*a;}
 template<class T>T mmin(T a,T b){return a<b?a:b;}
 template<class T>T mmax(T a,T b){return a>b?a:b;}
 template<class T>T aabs(T a){return a<0?-a:a;}
@@ -204,14 +203,13 @@ int main(){
 	ll n,m,k,x;
 	read(n,m);
 	f1.n=n;f2.n=m;
-	for(ll i=0;i<n;++i){read(x);f1.a[i*4+1]=x;}
-	for(ll i=0;i<m;++i){read(x);f2.a[i*4+1]=x;}
+	for(ll i=0;i<n;++i){read(x);f1.a[i*4+1]=p-x;}
+	for(ll i=0;i<m;++i){read(x);f2.a[i*4+1]=p-x;}
 	read(k);
 	f1.solve(k);
-//	debug("redbagakioi\n");
 	f2.solve(k);
 	fac[0]=fac[1]=inv[1]=invf[0]=invf[1]=1;
-	for(ll i=2;i<=k;++i){
+	for(ll i=2;i<=k||i<=n||i<=m;++i){
 		fac[i]=fac[i-1]*i%p;
 		inv[i]=(p-p/i)*inv[p%i]%p;
 		invf[i]=invf[i-1]*inv[i]%p;
@@ -226,7 +224,7 @@ int main(){
 	NTT(b,N,1);
 	for(ll i=0;i<N;++i)a[i]=a[i]*b[i]%p;
 	NTT(a,N,-1);
-	for(ll i=1;i<=k;++i)write(a[i]*fac[i]%p*n%p*m%p,'\n');
+	for(ll i=1;i<=k;++i)write(a[i]*fac[i]%p*inv[n]%p*inv[m]%p,'\n');
 	return 0;
 }
 
