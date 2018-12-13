@@ -139,16 +139,15 @@ int main(){
 	}
 	ll half=(p+1)>>1;
 	/*a=(1+sqrt(5))/2;
-	b=(1-sqrt(5))/2;*/
+	  b=(1-sqrt(5))/2;*/
 	a=xll(half,half);
 	b=xll(half,p-half);
-/*	xll a1=1,b1=1;
-	for(int i=1;i<=10;++i){
+	/*	xll a1=1,b1=1;
+		for(int i=1;i<=10;++i){
 		a1=a1*a;
 		b1=b1*b;
 		printf("%lld %lld\n",((a1-b1)/(a-b)).a,((a1-b1)/(a-b)).b);
-	}*/
-	printf("%lld,%lld | %lld,%lld\n",a.a,a.b,b.a,b.b);
+		}*/
 	xll s=1,ans=0,x,sum;
 	c[0][0]=1;
 	for(ll i=1;i<=k;++i){
@@ -161,14 +160,15 @@ int main(){
 		for(ll j=0;j<=i;++j){
 			ll af=c[i][j];
 			if(j&1)af=p-af;
-//			printf("===%lld,%lld\n",(((fpm(x,r)-fpm(x,l))/(x-xll(1))*xll(af))).a,(((fpm(x,r)-fpm(x,l))/(x-xll(1))*xll(af))).b);
-			sum=sum+((fpm(x,r)-fpm(x,l))/(x-xll(1))*xll(af));
+			//			printf("===%lld,%lld\n",(((fpm(x,r)-fpm(x,l))/(x-xll(1))*xll(af))).a,(((fpm(x,r)-fpm(x,l))/(x-xll(1))*xll(af))).b);
+			if(x.a==1 && x.b==0){
+				sum=(sum+xll((r-l)%p)*xll(af));
+			}
+			else sum=sum+((fpm(x,r)-fpm(x,l))/(x-xll(1))*xll(af));
 			x=x/a*b;	
 		}
-		printf("%lld,%lld\n",sum.a,sum.b);
 		ans=ans+sum*xll(f[i])/s;
 	}
-	printf("%lld %lld\n",ans.a,ans.b);
 	ll Ans=ans.a,w=1;
 	for(ll i=1;i<=k;++i){w=w*i%p;}
 	Ans=Ans*fpm(w,p-2)%p;
