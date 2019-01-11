@@ -111,10 +111,9 @@ ll C(ll a,ll b){
 		if(x>inf/s)return inf;
 		s*=x;
 	}
-	printf("C(%lld,%lld)=%lld\n",a+b,a,s);
 	return s;
 }
-#define chk if(tmp>=n)return 1
+#define chk if(tmp>n)return 1
 ll check(ll x){
 	ll tmp=x/c0+x/c1+1;
 	chk;
@@ -123,25 +122,31 @@ ll check(ll x){
 			tmp+=C(j,i);
 			chk;
 		}
-		for(ll j=i;j*c1+i*c0<=x;++j){
+		for(ll j=i+1;j*c1+i*c0<=x;++j){
 			tmp+=C(j,i);
 			chk;
 		}
 	}
-	printf("%lld:%lld\n",x,tmp);
 	return 0;
 }
-void Work(ll w){
-	printf("%lld\n",w);
-	ll ans=0;
-	for(ll i=0;i<=27;++i){ 
-		if(i*c1>w)break;
-		ll j;
-		j=(w-i*c1)/c0;
-		ans+=(i*c1+(j+1)*c0)*C(j,i);
+void Work(ll x,ll &tmp,ll &ans){
+	tmp=x/c0+x/c1+1;
+	ans=((x/c0)*(x/c0+1)*c0+(x/c1)*(x/c1+1)*c1)>>1;
+	ll c;
+	for(ll i=1;i<=26;++i){
+		for(ll j=i;j*c0+i*c1<=x;++j){
+			c=C(j,i);
+			tmp+=c;
+			ans+=c*(j*c0+i*c1);
+		}
+		for(ll j=i+1;j*c1+i*c0<=x;++j){
+			c=C(j,i);
+			tmp+=c;
+			ans+=c*(j*c1+i*c0);
+		}
 	}
-	printf("%lld\n",ans);
 }
+
 int main(){
 #ifdef cnyali_lk
 	freopen("B.in","r",stdin);
@@ -150,13 +155,17 @@ int main(){
 	read(n,c0,c1);
 	--n;
 	if(c0>c1)swap(c0,c1);
+	if(!c0)printf("%lld\n",n*c1);
 	ll l=0,r=c1*26,mid;
 	while(l<=r){
 		mid=(l+r)>>1;	
 		if(check(mid))r=mid-1;
 		else l=mid+1;
 	}
-	Work(l);
+	ll c,s;
+	Work(l-1,c,s);
+	s+=(n-c)*l+n*(c0+c1);
+	printf("%lld\n",s);
 	return 0;
 }
 

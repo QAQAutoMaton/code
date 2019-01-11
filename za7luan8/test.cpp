@@ -83,17 +83,23 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: print;
-char *s="wxhtxdy\n";
+void work(){
+	int x;
+	++x;
+	print(x,'!');
+}
 int main(){
 #ifdef cnyali_lk
 	freopen("test.in","r",stdin);
 	freopen("test.out","w",stdout);
 #endif
-	int a,b;
-	char c;
-	read(a,c,b);
-	print(a+b,' ',a-b,s,"wxhtxdy\n",a*b,'|',a*b-a-b,'\n');
-	
+	work();	
+	work();	
+	work();	
+	work();	
+	work();	
+	int x;
+	print(x,'\n');
 	return 0;
 }
 

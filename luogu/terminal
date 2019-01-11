@@ -1,0 +1,10 @@
+4719.cpp:17:14: warning: overflow in implicit constant conversion [-Woverflow]
+ const ll inf=0x3f3f3f3f3f3f3f3f;
+              ^~~~~~~~~~~~~~~~~~
+4719.cpp: In function ‘int main()’:
+4719.cpp:210:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
+  freopen("4719.in","r",stdin);
+  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+4719.cpp:211:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
+  freopen("4719.out","w",stdout);
+  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~

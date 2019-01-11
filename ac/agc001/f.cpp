@@ -95,13 +95,72 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
+int a[500005],p[500005];
+struct smt{
+	int ls,rs,mx;
+	smt *l,*r;	
+	smt(int la,int ra){
+		ls=la;rs=ra;	
+		mx=0;
+		if(la==ra){
+			l=r=0;
+		}
+		else{
+			int mid=(ls+rs)>>1;
+			l=new smt(ls,mid);
+			r=new smt(mid+1,rs);
+		}
+	}
+	int query(int la,int ra){
+		if(la<=ls && rs<=ra)return mx;
+		int mx=0;	
+		if(la<=l->rs)chkmax(mx,l->query(la,ra));
+		if(r->ls<=ra)chkmax(mx,r->query(la,ra));
+		return mx;
+	}
+	void upd(int x,int y){
+		mx=y;
+		if(ls==rs)return;
+		if(x<=l->rs)l->upd(x,y);
+		else r->upd(x,y);
+	}
+};
+smt *rt;
+int ind[500005],c[500005];
+vector<int> to[500005];
+priority_queue<pii> pq;
 int main(){
 #ifdef cnyali_lk
 	freopen("f.in","r",stdin);
 	freopen("f.out","w",stdout);
 #endif
-	int n;	
-	read(n);
+	int n,k,x;	
+	read(n,k);
+	for(int i=1;i<=n;++i){
+		read(a[i]);
+		p[a[i]]=i;
+	}
+	rt=new smt(1,n);
+	for(int i=1;i<=n;++i){
+		to[i].push_back(x=rt->query(p[i]-k+1,p[i]));++ind[x];
+		to[i].push_back(x=rt->query(p[i],p[i]+k-1));++ind[x];
+		rt->upd(p[i],i);	
+	}
+	for(int i=1;i<=n;++i)if(!ind[i])pq.push(make_pair(p[i],i));
+	int t=n+1;
+	while(!pq.empty()){
+		c[--t]=pq.top().x;
+		int x=pq.top().y;	
+		pq.pop();
+		for(auto i:to[x]){
+			if(!--ind[i]){
+				pq.push(make_pair(p[i],i));	
+			}
+		}
+	}
+	for(int i=1;i<=n;++i)a[i]=i;
+	sort(a+1,a+n+1,cmp_a<c>);
+	for(int i=1;i<=n;++i)printf("%d\n",a[i]);
 	return 0;
 }
 

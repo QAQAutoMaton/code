@@ -1,7 +1,7 @@
 /*
 Author: CNYALI_LK
 LANG: C++
-PROG: 2347.cpp
+PROG: e.cpp
 Mail: cnyalilk@vip.qq.com
 */
 #include<bits/stdc++.h>
@@ -59,6 +59,7 @@ namespace io {
 	inline void read(char *x){
 		while((*x=gc())=='\n' || *x==' '||*x=='\r');
 		while(!(*x=='\n'||*x==' '||*x=='\r'))*(++x)=gc();
+		*x=0;
 	}
 	template<typename A,typename ...B>
 	inline void read(A &x,B &...y){
@@ -95,43 +96,37 @@ namespace io {
 using io :: read;
 using io :: putc;
 using io :: write;
-ll Log(ll n,ll m){
-	ll s=1,t=0;
-	for(;s<n;s*=m){++t;if(n/s<m)break;}
-	return t;
-}
-ll Sqrt(ll n,ll m){
-	ll l=2,r=n,mid;
-	while(l<=r){
-		mid=(l+r)>>1;
-		if(Log(n,mid)<=m)r=mid-1;
-		else l=mid+1;
+ll w[100005],t,a[100005],pw[100005];
+void Work(ll t,ll x,ll pm){ 
+	if(t==1){
+		a[1]+=pm;
+		a[x+1]-=pm;
+		return;
 	}
-	return r+1;
-}
-ll work(ll n,ll s,ll p,ll v){
-	ll cnt=0;
-	while(n>=s){
-		n/=s;
-		cnt+=s*p+v;
-	}
-	if(n>1)cnt+=n*p+v;
-	return cnt;
+	pw[t-1]+=pm*(x/w[t-1]);
+	x%=w[t-1];
+	if(!x)return;
+	ll r=upper_bound(w+1,w+t+1,x)-w;
+	Work(r,x,pm);
 }
 int main(){
 #ifdef cnyali_lk
-	freopen("2347.in","r",stdin);
-	freopen("2347.out","w",stdout);
+	freopen("e.in","r",stdin);
+	freopen("e.out","w",stdout);
 #endif
-	ll n,p,v;	
-	read(n,p,v);
-	ll ans=n*p+v,s=n;
-	for(ll i=2,lgg=Log(n,2);i<=lgg;++i){
-		s=Sqrt(n,i);
-//		printf("%lld:%lld\n",i,s);
-		chkmin(ans,work(n,s,p,v));
+	ll n,q,xw;
+	read(n,q);
+	w[t=1]=n;
+	for(ll i=1;i<=q;++i){
+		read(xw);
+		while(t && w[t]>=xw)--t;
+		w[++t]=xw;
 	}
-	printf("%lld\n",ans);
+	pw[t]=1;
+	for(ll i=t;i;--i){
+		if(pw[i])Work(i,w[i],pw[i]);
+	}
+	for(ll i=1;i<=n;++i)write(a[i]+=a[i-1],'\n');
 	return 0;
 }
 

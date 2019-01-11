@@ -1,7 +1,8 @@
-new.cpp: In function ‘int main()’:
-new.cpp:9:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
-  freopen("czy.in","r",stdin);
-  ~~~~~~~^~~~~~~~~~~~~~~~~~~~
-new.cpp:10:9: warning: ignoring return value of ‘FILE* freopen(const char*, const char*, FILE*)’, declared with attribute warn_unused_result [-Wunused-result]
-  freopen("czy.out","w",stdout);
-  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+bug.cpp:103:13: error: expected ';' at end of declaration
+        int a=1<<33     
+                   ^
+                   ;
+bug.cpp:103:9: warning: shift count >= width of type [-Wshift-count-overflow]
+        int a=1<<33     
+               ^ ~~
+1 warning and 1 error generated.
