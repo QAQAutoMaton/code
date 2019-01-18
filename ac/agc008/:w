@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+__author__ = 'cnyali_lk'
+from bs4 import BeautifulSoup
+from markdown import markdown
+import io
+def update(text,a,b): 
+    while a in text:
+        tmp=text.split(a)
+        text=tmp[0]+b+tmp[1]
+    return text
+def to_md(Input,Output):
+    start=False
+    s=0
+    with open(Output,'w') as Of:
+        with open(Input,"r") as If:
+            textx=If.readlines()
+            for text in textx:
+                if start == False:
+                    if '<span class="lang-en">' in text:
+                        start =True
+                if start:
+                    if not(('<section' in text)or ('</section' in text) or ('<div' in text) or ('</div>' in text)):
+                        if '<span' in text:
+                            s+=1
+                        elif '</span' in text:
+                            s-=1
+                        else:
+                            text=update(text,'<var>','$')
+                            text=update(text,'</var>','$')
+                            text=update(text,'<p>','\n\n')
+                            text=update(text,'</p>','')
+                            text=update(text,'<h3>','\n### ')
+                            text=update(text,'</h3>','')
+                            text=update(text,'<pre>','\n```\n')
+                            text=update(text,'</pre>','\n```\n')
+                            Of.write(text)
+                            
+
+to_md('c.html','c.md')
+
