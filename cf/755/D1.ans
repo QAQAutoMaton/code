@@ -1,0 +1,13 @@
+
+
+
+### Note
+The greatest common divisor (gcd) of two integers <span class="tex-span"><i>a</i></span> and <span class="tex-span"><i>b</i></span> is the largest positive integer that divides both <span class="tex-span"><i>a</i></span> and <span class="tex-span"><i>b</i></span> without a remainder.
+
+For the first sample testcase, you should output &quot;<span class="tex-font-style-tt">2 3 5 8 11</span>&quot;. Pictures below correspond to situations after drawing lines.
+
+<center> <img class="tex-graphics" src="/predownloaded/33/de/33de87d500c2f587988d5c0f86e1af173bf4227e.png" style="max-width: 100.0%;max-height: 100.0%;" /> <img class="tex-graphics" src="/predownloaded/5c/d0/5cd059d6a34bc4d34e9980ea56b9394f6ea929b6.png" style="max-width: 100.0%;max-height: 100.0%;" /> <img class="tex-graphics" src="/predownloaded/1a/0f/1a0f27678edfb803f7a60c2f7ea25feaf3b80f9a.png" style="max-width: 100.0%;max-height: 100.0%;" /> <img class="tex-graphics" src="/predownloaded/ab/0d/ab0dbd4291753344fda575c0f2cbe238e5304626.png" style="max-width: 100.0%;max-height: 100.0%;" /> <img class="tex-graphics" src="/predownloaded/cb/d0/cbd0c456c1bf9e00bb08ac4ae776710eb9d9348f.png" style="max-width: 100.0%;max-height: 100.0%;" /> <img class="tex-graphics" src="/predownloaded/98/d5/98d5cd46decf854ba7abe0a70ee796fe0e01fe2a.png" style="max-width: 100.0%;max-height: 100.0%;" /> </center>
+
+  
+
+

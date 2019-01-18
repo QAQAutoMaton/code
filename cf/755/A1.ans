@@ -1,0 +1,15 @@
+
+
+
+### Note
+A prime number (or a prime) is a natural number greater than <span class="tex-span">1</span> that has no positive divisors other than <span class="tex-span">1</span> and itself.
+
+For the first sample testcase, <span class="tex-span">3·1 + 1 = 4</span>. We can output <span class="tex-span">1</span>.
+
+In the second sample testcase, <span class="tex-span">4·1 + 1 = 5</span>. We cannot output <span class="tex-span">1</span> because <span class="tex-span">5</span> is prime. However, <span class="tex-span"><i>m</i> = 2</span> is okay since <span class="tex-span">4·2 + 1 = 9</span>, which is not a prime number.
+
+
+
+  
+
+
